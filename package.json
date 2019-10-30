@@ -2,7 +2,7 @@
   "name": "better-divvy-api",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Andrew Hazlett <andrew@hazlett.me>",
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
