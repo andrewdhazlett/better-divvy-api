@@ -7,4 +7,4 @@ import { DivvyModule } from './divvy/divvy.module';
   controllers: [StationsController],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

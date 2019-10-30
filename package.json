@@ -29,6 +29,7 @@
     "@nestjs/core": "^6.7.2",
     "@nestjs/platform-express": "^6.7.2",
     "reflect-metadata": "^0.1.13",
+    "request-promise": "^4.2.4",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3"
   },

@@ -12,7 +12,8 @@ describe('GbfsFeedService', () => {
     service = module.get<GbfsFeedService>(GbfsFeedService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('should get feed data', async () => {
+    const data = await service.fetchData();
+    expect(data).toBeDefined();
   });
 });
