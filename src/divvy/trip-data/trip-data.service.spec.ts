@@ -12,7 +12,8 @@ describe('TripDataService', () => {
     service = module.get<TripDataService>(TripDataService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('should fetch data', async () => {
+    const data = await service.fetchData();
+    expect(data).toBeDefined();
   });
 });

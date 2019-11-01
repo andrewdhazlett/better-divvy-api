@@ -4,7 +4,7 @@ import { Station } from '../../stations/stations.interface';
 
 @Injectable()
 export class GbfsFeedService {
-  feedUrl: string =
+  private readonly feedUrl: string =
     'https://gbfs.divvybikes.com/gbfs/en/station_information.json';
 
   async fetchData(): Promise<Station[]> {
