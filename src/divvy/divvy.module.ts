@@ -4,5 +4,6 @@ import { TripDataService } from './trip-data/trip-data.service';
 
 @Module({
   providers: [GbfsFeedService, TripDataService],
+  exports: [GbfsFeedService, TripDataService],
 })
 export class DivvyModule {}

@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { StationsController } from './stations/stations.controller';
 import { DivvyModule } from './divvy/divvy.module';
+import { StationsModule } from './stations/stations.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
-  imports: [DivvyModule],
-  controllers: [StationsController],
-  providers: [],
+  imports: [DivvyModule, DatabaseModule, StationsModule],
 })
 export class AppModule {}

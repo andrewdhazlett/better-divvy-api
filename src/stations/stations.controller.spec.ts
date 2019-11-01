@@ -17,6 +17,7 @@ const stationData = {
   eightd_has_key_dispenser: expect.any(Boolean),
   has_kiosk: expect.any(Boolean),
 };
+
 describe('Stations Controller', () => {
   let controller: StationsController;
 
