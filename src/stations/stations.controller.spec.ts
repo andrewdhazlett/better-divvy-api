@@ -21,7 +21,7 @@ const stationData = {
 describe('Stations Controller', () => {
   let controller: StationsController;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [DivvyModule],
       controllers: [StationsController],

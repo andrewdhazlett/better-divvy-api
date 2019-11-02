@@ -1,0 +1,37 @@
+import { Controller, Get, Param } from '@nestjs/common';
+import { TripsService } from './trips.service';
+import { IAgeGroups } from './trips.interface';
+import { Trip } from './trips.entity';
+
+@Controller('trips')
+export class TripsController {
+  private readonly ageGroups = {
+    '0-20': 0,
+    '21-30': 0,
+    '31-40': 0,
+    '41-50': 0,
+    '51+': 0,
+  };
+
+  constructor(private readonly tripsService: TripsService) {}
+
+  @Get('/ageGroups/:date')
+  async getAgeGroups(@Param('date') date: string): Promise<IAgeGroups> {
+    const trips = await this.tripsService.getTripsForDate(date);
+    return trips.reduce((ageGroups: IAgeGroups, trip: Trip) => {
+      const age = new Date().getFullYear() - trip.member_birthday_year;
+      if (age <= 20) {
+        return { ...ageGroups, '0-20': ageGroups['0-20'] + 1 };
+      } else if (age <= 30) {
+        return { ...ageGroups, '21-30': ageGroups['21-30'] + 1 };
+      } else if (age <= 40) {
+        return { ...ageGroups, '31-40': ageGroups['31-40'] + 1 };
+      } else if (age <= 50) {
+        return { ...ageGroups, '41-50': ageGroups['41-50'] + 1 };
+      } else if (age >= 51) {
+        return { ...ageGroups, '51+': ageGroups['51+'] + 1 };
+      }
+      return ageGroups;
+    }, this.ageGroups);
+  }
+}

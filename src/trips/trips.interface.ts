@@ -12,3 +12,11 @@ export interface Trip {
   member_gender: string;
   member_birthday_year: string;
 }
+
+export interface IAgeGroups {
+  '0-20': number;
+  '21-30': number;
+  '31-40': number;
+  '41-50': number;
+  '51+': number;
+}

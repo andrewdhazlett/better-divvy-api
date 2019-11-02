@@ -18,7 +18,6 @@ describe('TripsService', () => {
   it('should find a trip by rental_id', async () => {
     const rental_id = '22178536';
     const trip = await service.findById(rental_id);
-    console.dir(trip);
     expect(trip).toBeDefined();
     expect(trip).toHaveProperty('rental_id', rental_id);
   });
