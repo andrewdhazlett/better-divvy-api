@@ -28,4 +28,12 @@ describe('TripsService', () => {
     expect(trips).toBeDefined();
     expect(trips.length).toBeCloseTo(14500, -3);
   });
+
+  it('should find trips for a date with station_ids', async () => {
+    const date = '2019-04-22';
+    const station_ids = ['15'];
+    const trips = await service.getTripsForDate(date, station_ids);
+    expect(trips).toBeDefined();
+    expect(trips.length).toBeCloseTo(40, -1);
+  });
 });

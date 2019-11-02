@@ -44,9 +44,20 @@ export class TripsService {
     return record;
   }
 
-  async getTripsForDate(date: string): Promise<Trip[]> {
-    return this.tripsRepository.query(
-      `SELECT * FROM trip WHERE local_start_time LIKE '%${date}%'`,
-    );
+  async getTripsForDate(date: string, station_ids?: string[]): Promise<Trip[]> {
+    if (station_ids == null) {
+      return this.tripsRepository.query(`
+        SELECT * FROM trip
+          WHERE local_start_time LIKE '%${date}%'
+      `);
+    }
+    return this.tripsRepository.query(`
+      SELECT * FROM trip
+        WHERE local_start_time LIKE '%${date}%'
+        AND (
+          start_station_id IN (${station_ids})
+          OR end_station_id IN (${station_ids})
+        )
+    `);
   }
 }
