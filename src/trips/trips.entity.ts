@@ -5,10 +5,10 @@ export class Trip {
   @PrimaryColumn()
   rental_id: string;
 
-  @Column()
+  @Column('text')
   local_start_time: string;
 
-  @Column()
+  @Column('text')
   local_end_time: string;
 
   @Column()
