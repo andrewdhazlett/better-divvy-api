@@ -14,7 +14,11 @@ export class TripsService {
     private readonly tripsRepository: Repository<Trip>,
     private readonly tripDataService: TripDataService,
   ) {
-    this.tripDataPromise = this.loadData();
+    this.tripDataPromise = this.tripsRepository.count().then(count => {
+      if (count === 0) {
+        return this.loadData();
+      }
+    });
   }
 
   private async loadData() {

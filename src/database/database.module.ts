@@ -4,7 +4,7 @@ import { Trip } from '../trips/trips.entity';
 
 export const DatabaseModule = TypeOrmModule.forRoot({
   type: 'sqlite',
-  database: ':memory:',
+  database: 'data/better-divvy.sql',
   entities: [Station, Trip],
   synchronize: true,
 });
