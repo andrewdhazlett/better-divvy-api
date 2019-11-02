@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { TripsService } from './trips.service';
 import { IAgeGroups } from './trips.interface';
 import { Trip } from './trips.entity';
@@ -16,8 +16,14 @@ export class TripsController {
   constructor(private readonly tripsService: TripsService) {}
 
   @Get('/ageGroups/:date')
-  async getAgeGroups(@Param('date') date: string): Promise<IAgeGroups> {
-    const trips = await this.tripsService.getTripsForDate(date);
+  async getAgeGroups(
+    @Param('date') date: string,
+    @Query('station_ids') station_ids: string[],
+  ): Promise<IAgeGroups> {
+    if (station_ids == null || station_ids.length == 0) {
+      throw new Error('BadRequest: must include station_ids query param');
+    }
+    const trips = await this.tripsService.getTripsForDate(date, station_ids);
     return trips.reduce((ageGroups: IAgeGroups, trip: Trip) => {
       const age = new Date().getFullYear() - trip.member_birthday_year;
       if (age <= 20) {

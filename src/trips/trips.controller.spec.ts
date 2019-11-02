@@ -18,9 +18,10 @@ describe('Trips Controller', () => {
     controller = module.get<TripsController>(TripsController);
   });
 
-  it('should get age groups for a date', async () => {
+  it('should get age groups for a date with station_ids', async () => {
     const date = '2019-04-22';
-    const data: IAgeGroups = await controller.getAgeGroups(date);
+    const station_ids = ['15'];
+    const data: IAgeGroups = await controller.getAgeGroups(date, station_ids);
     expect(data).toHaveProperty('0-20');
     expect(data).toHaveProperty('21-30');
     expect(data).toHaveProperty('31-40');
