@@ -11,6 +11,7 @@ export class TripsController {
     '31-40': 0,
     '41-50': 0,
     '51+': 0,
+    unknown: 0,
   };
 
   constructor(private readonly tripsService: TripsService) {}
@@ -36,8 +37,9 @@ export class TripsController {
         return { ...ageGroups, '41-50': ageGroups['41-50'] + 1 };
       } else if (age >= 51) {
         return { ...ageGroups, '51+': ageGroups['51+'] + 1 };
+      } else {
+        return { ...ageGroups, unknown: ageGroups.unknown + 1 };
       }
-      return ageGroups;
     }, this.ageGroups);
   }
 }

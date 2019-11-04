@@ -19,4 +19,5 @@ export interface IAgeGroups {
   '31-40': number;
   '41-50': number;
   '51+': number;
+  unknown: number;
 }

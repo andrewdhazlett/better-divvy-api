@@ -54,10 +54,7 @@ export class TripsService {
     return this.tripsRepository.query(`
       SELECT * FROM trip
         WHERE local_start_time LIKE '%${date}%'
-        AND (
-          start_station_id IN (${station_ids})
-          OR end_station_id IN (${station_ids})
-        )
+        AND end_station_id IN (${station_ids})
     `);
   }
 }

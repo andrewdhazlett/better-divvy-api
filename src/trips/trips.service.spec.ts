@@ -34,6 +34,6 @@ describe('TripsService', () => {
     const station_ids = ['15'];
     const trips = await service.getTripsForDate(date, station_ids);
     expect(trips).toBeDefined();
-    expect(trips.length).toBeCloseTo(40, -1);
+    expect(trips.length).toBeCloseTo(20, -1);
   });
 });
