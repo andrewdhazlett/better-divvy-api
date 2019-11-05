@@ -1,5 +1,5 @@
-import * as cluster from 'cluster'
-import * as os from 'os'
+import * as cluster from 'cluster';
+import * as os from 'os';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
@@ -15,7 +15,7 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-  cluster.on('exit', (worker) => {
+  cluster.on('exit', worker => {
     console.log(`worker ${worker.process.pid} died`);
   });
 } else {
