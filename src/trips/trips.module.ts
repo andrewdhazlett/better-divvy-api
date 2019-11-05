@@ -8,7 +8,7 @@ import { TripsController } from './trips.controller';
 
 @Module({
   imports: [DatabaseModule, DivvyModule, TypeOrmModule.forFeature([Trip])],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, TripsService],
   providers: [TripsService],
   controllers: [TripsController],
 })

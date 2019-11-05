@@ -1,8 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TripsController } from './trips.controller';
-import { TripsService } from './trips.service';
 import { TripsModule } from './trips.module';
-import { TripDataService } from '../divvy/trip-data/trip-data.service';
 import { IAgeGroups } from './trips.interface';
 
 describe('Trips Controller', () => {
@@ -12,7 +10,6 @@ describe('Trips Controller', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [TripsModule],
       controllers: [TripsController],
-      providers: [TripDataService, TripsService],
     }).compile();
 
     controller = module.get<TripsController>(TripsController);
