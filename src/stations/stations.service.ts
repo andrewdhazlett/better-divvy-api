@@ -14,7 +14,11 @@ export class StationsService {
     private readonly stationsRepository: Repository<Station>,
     private readonly gbfsFeed: GbfsFeedService,
   ) {
-    this.gbfsDataPromise = this.loadData();
+    this.gbfsDataPromise = this.stationsRepository.count().then(count => {
+      if (count === 0) {
+        return this.loadData();
+      }
+    });
   }
 
   private async loadData() {
@@ -36,5 +40,14 @@ export class StationsService {
       throw new Error(`Station ${station_id} not found`);
     }
     return { ...record, rental_methods: record.rental_methods.split(',') };
+  }
+
+  async getAll(): Promise<IStation[]> {
+    await this.gbfsDataPromise;
+    const records: Station[] = await this.stationsRepository.find({});
+    return records.map((record: Station) => ({
+      ...record,
+      rental_methods: record.rental_methods.split(','),
+    }));
   }
 }

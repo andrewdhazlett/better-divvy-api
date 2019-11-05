@@ -1,6 +1,6 @@
-import { Controller, Get, Param, Inject, Query } from '@nestjs/common';
+import { getDistance } from 'geolib';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { Station } from './stations.interface';
-import { GbfsFeedService } from '../divvy/gbfs-feed/gbfs-feed.service';
 import { StationsService } from './stations.service';
 import { TripsService } from '../trips/trips.service';
 import { Trip } from '../trips/trips.entity';
@@ -22,6 +22,9 @@ export class StationsController {
     @Param('date') date: string,
     @Query('station_ids') station_ids: string[],
   ): Promise<{ [k: string]: number }> {
+    if (station_ids == null || station_ids.length == 0) {
+      throw new Error('BadRequest: must include station_ids query param');
+    }
     const trips = await this.tripsService.getTripsForDate(date, station_ids);
 
     return trips.reduce(
@@ -34,5 +37,44 @@ export class StationsController {
       }),
       {},
     );
+  }
+
+  @Get('/recentTrips/:date')
+  async getStationRecentTrips(
+    @Param('date') date: string,
+    @Query('station_ids') station_ids: string[],
+  ): Promise<{ [k: string]: Trip[] }> {
+    if (station_ids == null || station_ids.length == 0) {
+      throw new Error('BadRequest: must include station_ids query param');
+    }
+    const trips = await this.tripsService.getTripsForDate(date, station_ids);
+
+    return trips.reduce(
+      (recentTrips: { [k: string]: Trip[] }, trip: Trip) => ({
+        ...recentTrips,
+        [trip.end_station_id]: [
+          ...(trip.end_station_id in recentTrips
+            ? recentTrips[trip.end_station_id]
+            : []),
+          trip,
+        ].slice(-20),
+      }),
+      {},
+    );
+  }
+
+  @Get('/nearbyStations')
+  async getNearbyStations(
+    @Query('lat') lat: number,
+    @Query('lon') lon: number,
+  ): Promise<Station[]> {
+    const stations = await this.stationsService.getAll();
+    return stations
+      .sort((a: Station, b: Station) => {
+        const distanceA = getDistance({ lat: a.lat, lon: a.lon }, { lat, lon });
+        const distanceB = getDistance({ lat: b.lat, lon: b.lon }, { lat, lon });
+        return distanceA - distanceB;
+      })
+      .slice(0, 5);
   }
 }
