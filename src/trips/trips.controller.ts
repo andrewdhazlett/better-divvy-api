@@ -1,4 +1,11 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { TripsService } from './trips.service';
 import { IAgeGroups } from './trips.interface';
 import { Trip } from './trips.entity';
@@ -22,7 +29,10 @@ export class TripsController {
     @Query('station_ids') station_ids: string[],
   ): Promise<IAgeGroups> {
     if (station_ids == null || station_ids.length == 0) {
-      throw new Error('BadRequest: must include station_ids query param');
+      throw new HttpException(
+        'must include station_ids query param',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const trips = await this.tripsService.getTripsForDate(date, station_ids);
     return trips.reduce((ageGroups: IAgeGroups, trip: Trip) => {

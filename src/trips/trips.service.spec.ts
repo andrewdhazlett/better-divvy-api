@@ -15,13 +15,6 @@ describe('TripsService', () => {
     service = module.get<TripsService>(TripsService);
   });
 
-  it('should find a trip by rental_id', async () => {
-    const rental_id = '22178536';
-    const trip = await service.findById(rental_id);
-    expect(trip).toBeDefined();
-    expect(trip).toHaveProperty('rental_id', rental_id);
-  });
-
   it('should find trips for a date', async () => {
     const date = '2019-04-22';
     const trips = await service.getTripsForDate(date);

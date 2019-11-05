@@ -1,5 +1,12 @@
 import { getDistance } from 'geolib';
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Station } from './stations.interface';
 import { StationsService } from './stations.service';
 import { TripsService } from '../trips/trips.service';
@@ -14,7 +21,9 @@ export class StationsController {
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<Station> {
-    return await this.stationsService.findById(id);
+    return await this.stationsService.findById(id).catch((err: Error) => {
+      throw new HttpException(err.message, HttpStatus.NOT_FOUND);
+    });
   }
 
   @Get('/tripCounts/:date')
@@ -23,7 +32,10 @@ export class StationsController {
     @Query('station_ids') station_ids: string[],
   ): Promise<{ [k: string]: number }> {
     if (station_ids == null || station_ids.length == 0) {
-      throw new Error('BadRequest: must include station_ids query param');
+      throw new HttpException(
+        'must include station_ids query param',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const trips = await this.tripsService.getTripsForDate(date, station_ids);
 
@@ -45,7 +57,10 @@ export class StationsController {
     @Query('station_ids') station_ids: string[],
   ): Promise<{ [k: string]: Trip[] }> {
     if (station_ids == null || station_ids.length == 0) {
-      throw new Error('BadRequest: must include station_ids query param');
+      throw new HttpException(
+        'must include station_ids query param',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const trips = await this.tripsService.getTripsForDate(date, station_ids);
 
@@ -68,7 +83,15 @@ export class StationsController {
     @Query('lat') lat: number,
     @Query('lon') lon: number,
   ): Promise<Station[]> {
-    const stations = await this.stationsService.getAll();
+    if (lat == null || lon == null) {
+      throw new HttpException(
+        'must include lat and lon query params',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const stations = await this.stationsService.getAll().catch((err: Error) => {
+      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    });
     return stations
       .sort((a: Station, b: Station) => {
         const distanceA = getDistance({ lat: a.lat, lon: a.lon }, { lat, lon });

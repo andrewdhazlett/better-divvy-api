@@ -33,17 +33,6 @@ export class TripsService {
     return this.tripsRepository.save(entities, { chunk: 500 });
   }
 
-  async findById(rental_id: string): Promise<Trip> {
-    await this.tripDataPromise;
-    const record: Trip = await this.tripsRepository.findOne({
-      rental_id,
-    });
-    if (record == null) {
-      throw new Error(`Trip ${rental_id} not found`);
-    }
-    return record;
-  }
-
   async getTripsForDate(date: string, station_ids?: string[]): Promise<Trip[]> {
     if (station_ids == null) {
       return this.tripsRepository.query(`
