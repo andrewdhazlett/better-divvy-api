@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StationsController } from './stations.controller';
-import { DivvyModule } from '../divvy/divvy.module';
-import { GbfsFeedService } from '../divvy/gbfs-feed/gbfs-feed.service';
+import { StationsModule } from './stations.module';
+import { TripsModule } from '../trips/trips.module';
 
 const stationData = {
   station_id: expect.stringMatching(/\d+/),
@@ -10,7 +10,6 @@ const stationData = {
   short_name: expect.any(String),
   lat: expect.any(Number),
   lon: expect.any(Number),
-  // TODO: enumerate
   rental_methods: expect.arrayContaining([expect.any(String)]),
   capacity: expect.any(Number),
   electric_bike_surcharge_waiver: expect.any(Boolean),
@@ -23,9 +22,8 @@ describe('Stations Controller', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [DivvyModule],
+      imports: [TripsModule, StationsModule],
       controllers: [StationsController],
-      providers: [GbfsFeedService],
     }).compile();
 
     controller = module.get<StationsController>(StationsController);
@@ -36,5 +34,13 @@ describe('Stations Controller', () => {
     const data = await controller.findById(id);
     expect(data).toMatchObject(stationData);
     expect(data).toHaveProperty('station_id', id);
+  }, 99999);
+
+  it('should get trip counts for stations on a date', async () => {
+    const date = '2019-04-22';
+    const station_id = '15';
+    const data = await controller.getStationTripCounts(date, [station_id]);
+    expect(data).toHaveProperty(station_id);
+    expect(data[station_id]).toBeCloseTo(20);
   });
 });
