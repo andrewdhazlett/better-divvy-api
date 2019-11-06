@@ -25,4 +25,20 @@ describe('Trips Controller', () => {
     expect(data).toHaveProperty('41-50');
     expect(data).toHaveProperty('51+');
   });
+
+  it('should get trip counts for stations on a date', async () => {
+    const date = '2019-04-22';
+    const station_id = '16';
+    const data = await controller.getStationTripCounts(date, [station_id]);
+    expect(data).toHaveProperty(station_id);
+    expect(data[station_id]).toBeGreaterThan(20);
+  });
+
+  it('should get recent trips for stations on a date', async () => {
+    const date = '2019-04-22';
+    const station_id = '16';
+    const data = await controller.getStationRecentTrips(date, [station_id]);
+    expect(data).toHaveProperty(station_id);
+    expect(data[station_id].length).toEqual(20);
+  });
 });

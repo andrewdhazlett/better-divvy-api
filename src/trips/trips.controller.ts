@@ -21,9 +21,9 @@ export class TripsController {
     unknown: 0,
   };
 
-  constructor(private readonly tripsService: TripsService) {}
+  constructor(private readonly tripsService: TripsService) { }
 
-  @Get('/ageGroups/:date')
+  @Get('/:date/ageGroups')
   async getAgeGroups(
     @Param('date') date: string,
     @Query('station_ids') station_ids: string[],
@@ -51,5 +51,57 @@ export class TripsController {
         return { ...ageGroups, unknown: ageGroups.unknown + 1 };
       }
     }, this.ageGroups);
+  }
+
+  @Get('/:date/tripCounts')
+  async getStationTripCounts(
+    @Param('date') date: string,
+    @Query('station_ids') station_ids: string[],
+  ): Promise<{ [k: string]: number }> {
+    if (station_ids == null || station_ids.length == 0) {
+      throw new HttpException(
+        'must include station_ids query param',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const trips = await this.tripsService.getTripsForDate(date, station_ids);
+
+    return trips.reduce(
+      (tripCounts: { [k: string]: number }, trip: Trip) => ({
+        ...tripCounts,
+        [trip.end_station_id]:
+          trip.end_station_id in tripCounts
+            ? tripCounts[trip.end_station_id] + 1
+            : 1,
+      }),
+      {},
+    );
+  }
+
+  @Get('/:date/recentTrips')
+  async getStationRecentTrips(
+    @Param('date') date: string,
+    @Query('station_ids') station_ids: string[],
+  ): Promise<{ [k: string]: Trip[] }> {
+    if (station_ids == null || station_ids.length == 0) {
+      throw new HttpException(
+        'must include station_ids query param',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const trips = await this.tripsService.getTripsForDate(date, station_ids);
+
+    return trips.reduce(
+      (recentTrips: { [k: string]: Trip[] }, trip: Trip) => ({
+        ...recentTrips,
+        [trip.end_station_id]: [
+          ...(trip.end_station_id in recentTrips
+            ? recentTrips[trip.end_station_id]
+            : []),
+          trip,
+        ].slice(-20),
+      }),
+      {},
+    );
   }
 }
