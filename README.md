@@ -23,6 +23,11 @@ curl http://localhost:3000/trips/2019-04-22/recentTrips\?station_ids\=16,17 -H "
 $ npm install
 ```
 
+#### Configuration
+
+This app uses dotenv for managing environment variables.
+The included `.env.example` can be copied directly as `.env`.
+
 #### Running the app
 
 ```bash
