@@ -21,7 +21,7 @@ export class TripsController {
     unknown: 0,
   };
 
-  constructor(private readonly tripsService: TripsService) { }
+  constructor(private readonly tripsService: TripsService) {}
 
   @Get('/:date/ageGroups')
   async getAgeGroups(

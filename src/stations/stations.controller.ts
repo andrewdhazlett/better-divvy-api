@@ -12,9 +12,7 @@ import { StationsService } from './stations.service';
 
 @Controller('stations')
 export class StationsController {
-  constructor(
-    private readonly stationsService: StationsService,
-  ) { }
+  constructor(private readonly stationsService: StationsService) {}
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<Station> {
