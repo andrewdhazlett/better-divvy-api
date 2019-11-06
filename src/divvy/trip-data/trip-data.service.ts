@@ -21,6 +21,9 @@ export class TripDataService {
     'member_birthday_year',
   ];
 
+  // low-hanging fruit: use streaming API to pipe directly from the filesystem
+  //  to the csv parser instead of buffering in memory.
+  //  Not implementing since this method is only used if sqlite isn't populated
   fetchData(): Promise<Trip[]> {
     return new Promise((resolve, reject) => {
       fs.readFile(this.csvPath, (err, csvData) => {
